@@ -11,17 +11,18 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    if (isUserDropdownOpen) setIsUserDropdownOpen(false);
+    if (isUserDropdownOpen) setIsUserDropdownOpen(false); // Close user dropdown if menu is toggled
   };
 
   const toggleUserDropdown = () => {
     setIsUserDropdownOpen(!isUserDropdownOpen);
+    if (isMenuOpen) setIsMenuOpen(false); // Close the hamburger menu if user dropdown is toggled
   };
 
   const handleLogout = () => {
     logout();
-    setIsMenuOpen(false);  // Close the menu on logout
-    setIsUserDropdownOpen(false);  // Close the user dropdown
+    setIsMenuOpen(false); // Close the hamburger menu on logout
+    setIsUserDropdownOpen(false); // Close the user dropdown on logout
   };
 
   const closeMenu = () => {
@@ -33,39 +34,59 @@ const Navbar = () => {
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
-            <a href="/">
-              <img className="h-8 w-8" src="/assets/logo.jpg" alt="Logo" />
-            </a>
-            <a href='/' className="font-bold text-xl ml-2 hidden md:block">Glorious Vision University</a>
+            <Link href="/" legacyBehavior>
+              <a>
+                <img className="h-8 w-8" src="/assets/logo.jpg" alt="Logo" />
+                <span className="font-bold text-xl ml-2 hidden md:block">Glorious Vision University</span>
+              </a>
+            </Link>
           </div>
           <div className="flex items-center">
-            {user ? (
-              <>
+            {user && (
+              <button onClick={toggleUserDropdown} className="p-2 md:hidden">
+                <FaUserCircle size={24} className="text-gray-800" />
+              </button>
+            )}
+            <button onClick={toggleMenu} className="p-2 md:hidden">
+              {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+            </button>
+            <div className="hidden md:flex items-center space-x-4">
+              <Link href="/" legacyBehavior><a className="menu-link" onClick={closeMenu}>Home</a></Link>
+              <Link href="/about" legacyBehavior><a className="menu-link" onClick={closeMenu}>About</a></Link>
+              <Link href="/faculties" legacyBehavior><a className="menu-link" onClick={closeMenu}>Faculties</a></Link>
+              <Link href="/cgpa-calculator" legacyBehavior><a className="menu-link" onClick={closeMenu}>CGPA Calculator</a></Link>
+              <Link href="/#faqs" legacyBehavior><a className="menu-link" onClick={closeMenu}>FAQs</a></Link>
+              <Link href="/contact" legacyBehavior><a className="menu-link" onClick={closeMenu}>Contact Us</a></Link>
+              {!user ? (
+                <>
+                  <Link href="/login" legacyBehavior><a className="menu-link" onClick={closeMenu}>Login</a></Link>
+                  <Link href="/signup" legacyBehavior><a className="menu-link" onClick={closeMenu}>Sign Up</a></Link>
+                </>
+              ) : (
                 <button onClick={toggleUserDropdown} className="p-2">
                   <FaUserCircle size={24} className="text-gray-800" />
                 </button>
-              </>
-            ) : null}
-            <button onClick={toggleMenu} className="p-2">
-              {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-            </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
-      <div className={`animated-menu-left ${isMenuOpen ? 'nav-active' : ''}`}>
-        <Link legacyBehavior href="/" onClick={closeMenu}><a className="menu-link">Home</a></Link>
-        <Link legacyBehavior href="/about" onClick={closeMenu}><a className="menu-link">About</a></Link>
-        <Link legacyBehavior href="/faculties" onClick={closeMenu}><a className="menu-link">Past Questions</a></Link>
-        <Link legacyBehavior href="/cgpa-calculator" onClick={closeMenu}><a className="menu-link">CGPA Calculator</a></Link>
-        <Link legacyBehavior href="/#faqs" onClick={closeMenu}><a className="menu-link">FAQs</a></Link>
-        <Link legacyBehavior href="/contact" onClick={closeMenu}><a className="menu-link">Contact Us</a></Link>
-        {!user && (
-          <>
-            <Link legacyBehavior href="/login" onClick={closeMenu}><a className="menu-link">Login</a></Link>
-            <Link legacyBehavior href="/signup" onClick={closeMenu}><a className="menu-link cta">Sign Up</a></Link>
-          </>
-        )}
-      </div>
+      {isMenuOpen && (
+        <div className="md:hidden bg-white shadow-md absolute w-full">
+          <Link href="/" legacyBehavior><a className="block p-2" onClick={closeMenu}>Home</a></Link>
+          <Link href="/about" legacyBehavior><a className="block p-2" onClick={closeMenu}>About</a></Link>
+          <Link href="/faculties" legacyBehavior><a className="block p-2" onClick={closeMenu}>Faculties</a></Link>
+          <Link href="/cgpa-calculator" legacyBehavior><a className="block p-2" onClick={closeMenu}>CGPA Calculator</a></Link>
+          <Link href="/#faqs" legacyBehavior><a className="block p-2" onClick={closeMenu}>FAQs</a></Link>
+          <Link href="/contact" legacyBehavior><a className="block p-2" onClick={closeMenu}>Contact Us</a></Link>
+          {!user ? (
+            <>
+              <Link href="/login" legacyBehavior><a className="block p-2" onClick={closeMenu}>Login</a></Link>
+              <Link href="/signup" legacyBehavior><a className="block p-2" onClick={closeMenu}>Sign Up</a></Link>
+            </>
+          ) : null}
+        </div>
+      )}
       {isUserDropdownOpen && (
         <div className="absolute right-0 mt-16 py-2 w-48 bg-white rounded-md shadow-xl z-20">
           <div className="flex items-center px-4 py-3 border-b border-gray-200">
@@ -75,8 +96,8 @@ const Navbar = () => {
               <p className="text-xs text-gray-600">{user?.matricNumber}</p>
             </div>
           </div>
-          <Link legacyBehavior href="/dashboard"><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={closeMenu}>Dashboard</a></Link>
-          <Link legacyBehavior href="/settings"><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={closeMenu}>Settings</a></Link>
+          <Link href="/dashboard" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={closeMenu}>Dashboard</a></Link>
+          <Link href="/settings" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={closeMenu}>Settings</a></Link>
           <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
         </div>
       )}
