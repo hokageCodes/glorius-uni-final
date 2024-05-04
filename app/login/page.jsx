@@ -24,6 +24,7 @@ const Signin = () => {
     if (response.ok) {
       const data = await response.json();
       login(data);
+      window.location.href = '/'
     } else {
       const errData = await response.json();
       setError(errData.error || 'Failed to login');
@@ -31,8 +32,8 @@ const Signin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
-      <div className="max-w-md w-full bg-white rounded p-8 shadow">
+    <div className="min-h-screen bg-white flex flex-col justify-center items-center">
+      <div className="max-w-sm w-full bg-white rounded p-8 shadow">
       <div className="flex justify-center mb-6">
           <img src="/assets/logo.jpg" alt="Logo" className="h-12" />
         </div>

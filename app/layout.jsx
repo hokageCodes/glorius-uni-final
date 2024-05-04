@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import Navbar from "@/components/navbar/Navbar";
 import { AuthProvider } from "@/context/AuthContext";
+import Footer from "@/components/footer/Footer";
 
 const syne = Syne({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
           <ThemeProvider>
             <Navbar />
             {children}
+            <Footer />
           </ThemeProvider>
         </AuthProvider>
         </body>

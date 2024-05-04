@@ -1,89 +1,83 @@
 "use client"
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { FaBars, FaTimes, FaUserCircle } from 'react-icons/fa';  // Include user icon
+import { FaBars, FaTimes, FaUserCircle } from 'react-icons/fa';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
-  const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    if (isUserDropdownOpen) setIsUserDropdownOpen(false);
+  };
+
+  const toggleUserDropdown = () => {
+    setIsUserDropdownOpen(!isUserDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsMenuOpen(false);  // Close the menu on logout
+    setIsUserDropdownOpen(false);  // Close the user dropdown
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav className="bg-white shadow fixed w-full z-10 top-0 left-0">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Hide logo text on mobile and show only the logo icon */}
-          <div className="flex-shrink-0 flex items-center">
-            <img className="h-8 w-8 mr-2" src="/assets/logo.jpg" alt="Logo" />
-            <span className="font-bold text-xl hidden md:block">Glorious Vision University</span>
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          <div className="flex items-center">
+            <a href="/">
+              <img className="h-8 w-8" src="/assets/logo.jpg" alt="Logo" />
+            </a>
+            <a href='/' className="font-bold text-xl ml-2 hidden md:block">Glorious Vision University</a>
           </div>
-          <div className="md:hidden">
-            {/* User Icon and Hamburger Menu */}
+          <div className="flex items-center">
             {user ? (
-              <div className="flex items-center">
-                <button onClick={toggleDropdown} className="p-2">
+              <>
+                <button onClick={toggleUserDropdown} className="p-2">
                   <FaUserCircle size={24} className="text-gray-800" />
                 </button>
-                <button onClick={toggleMenu} className="p-2">
-                  {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-                </button>
-              </div>
-            ) : (
-              <button onClick={toggleMenu}>
-                {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-              </button>
-            )}
-          </div>
-          <div className="hidden md:flex items-center">
-            {/* Desktop View */}
-            {user ? (
-              <div className="relative">
-                <button onClick={toggleDropdown}>
-                  <FaUserCircle size={24} className="text-gray-800" />
-                </button>
-                {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-xl z-20">
-                    <div className="flex items-center px-4 py-3 border-b border-gray-200">
-                      <FaUserCircle size={24} className="text-gray-800 mr-3" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                        <p className="text-xs text-gray-600">{user.matricNumber}</p>
-                      </div>
-                    </div>
-                    <Link legacyBehavior href="/dashboard"><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a></Link>
-                    <Link legacyBehavior href="/settings"><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a></Link>
-                    <button onClick={logout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex space-x-4">
-                <Link legacyBehavior href="/login"><a className="text-gray-800 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">Login</a></Link>
-                <Link legacyBehavior href="/signup"><a className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium">Sign Up</a></Link>
-              </div>
-            )}
+              </>
+            ) : null}
+            <button onClick={toggleMenu} className="p-2">
+              {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+            </button>
           </div>
         </div>
       </div>
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-white shadow">
-          <Link legacyBehavior href="/about"><a className="text-gray-800 hover:text-indigo-600 block px-3 py-2 text-base font-medium">About</a></Link>
-          <Link legacyBehavior href="/services"><a className="text-gray-800 hover:text-indigo-600 block px-3 py-2 text-base font-medium">Services</a></Link>
-          {user ? (
-            <>
-              <a onClick={logout} className="text-gray-800 hover:text-indigo-600 block px-3 py-2 text-base font-medium cursor-pointer">Logout</a>
-            </>
-          ) : (
-            <>
-              <Link legacyBehavior href="/login"><a className="text-gray-800 hover:bg-gray-100 block px-3 py-2 text-base font-medium">Login</a></Link>
-              <Link legacyBehavior href="/signup"><a className="bg-indigo-600 hover:bg-indigo-700 text-white block px-3 py-2 text-base font-medium">Sign Up</a></Link>
-            </>
-          )}
+      <div className={`animated-menu-left ${isMenuOpen ? 'nav-active' : ''}`}>
+        <Link legacyBehavior href="/" onClick={closeMenu}><a className="menu-link">Home</a></Link>
+        <Link legacyBehavior href="/about" onClick={closeMenu}><a className="menu-link">About</a></Link>
+        <Link legacyBehavior href="/faculties" onClick={closeMenu}><a className="menu-link">Past Questions</a></Link>
+        <Link legacyBehavior href="/cgpa-calculator" onClick={closeMenu}><a className="menu-link">CGPA Calculator</a></Link>
+        <Link legacyBehavior href="/#faqs" onClick={closeMenu}><a className="menu-link">FAQs</a></Link>
+        <Link legacyBehavior href="/contact" onClick={closeMenu}><a className="menu-link">Contact Us</a></Link>
+        {!user && (
+          <>
+            <Link legacyBehavior href="/login" onClick={closeMenu}><a className="menu-link">Login</a></Link>
+            <Link legacyBehavior href="/signup" onClick={closeMenu}><a className="menu-link cta">Sign Up</a></Link>
+          </>
+        )}
+      </div>
+      {isUserDropdownOpen && (
+        <div className="absolute right-0 mt-16 py-2 w-48 bg-white rounded-md shadow-xl z-20">
+          <div className="flex items-center px-4 py-3 border-b border-gray-200">
+            <FaUserCircle size={24} className="text-gray-800 mr-3" />
+            <div>
+              <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+              <p className="text-xs text-gray-600">{user?.matricNumber}</p>
+            </div>
+          </div>
+          <Link legacyBehavior href="/dashboard"><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={closeMenu}>Dashboard</a></Link>
+          <Link legacyBehavior href="/settings"><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={closeMenu}>Settings</a></Link>
+          <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
         </div>
       )}
     </nav>

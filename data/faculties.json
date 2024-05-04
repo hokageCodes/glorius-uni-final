@@ -1,0 +1,18 @@
+[
+    {
+      "id": "1",
+      "name": "Computer Science",
+      "description": "Explore courses in programming, algorithms, and system design."
+    },
+    {
+      "id": "2",
+      "name": "Law",
+      "description": "Dedicated to the study of legal systems and practices."
+    },
+    {
+      "id": "3",
+      "name": "Business Administration",
+      "description": "Covering business management, marketing, and finance."
+    }
+  ]
+  

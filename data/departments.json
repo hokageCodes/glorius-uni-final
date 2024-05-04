@@ -1,0 +1,22 @@
+[
+    {
+      "id": "1",
+      "facultyId": "1",
+      "name": "Software Engineering"
+    },
+    {
+      "id": "2",
+      "facultyId": "1",
+      "name": "Theoretical Computer Science"
+    },
+    {
+      "id": "3",
+      "facultyId": "2",
+      "name": "Corporate Law"
+    },
+    {
+      "id": "4",
+      "facultyId": "3",
+      "name": "Marketing"
+    }
+  ]  

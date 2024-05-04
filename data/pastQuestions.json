@@ -1,0 +1,17 @@
+[
+    {
+      "id": "1",
+      "departmentId": "1",
+      "title": "Introduction to Programming Midterm",
+      "description": "Midterm exam for Spring 2020",
+      "file": "midterm-2020.pdf"
+    },
+    {
+      "id": "2",
+      "departmentId": "1",
+      "title": "Data Structures Final Exam",
+      "description": "Final exam for Fall 2019",
+      "file": "final-2019.pdf"
+    }
+  ]
+  
