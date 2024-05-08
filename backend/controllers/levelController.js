@@ -14,11 +14,15 @@ exports.createLevel = async (req, res) => {
 
 exports.getLevelsByDepartment = async (req, res) => {
     const { departmentId } = req.params;
-    console.log("Fetching levels for Department ID:", departmentId); // Log the department ID
+    console.log("Fetching levels for Department ID:", departmentId);
 
     try {
         const levels = await Level.find({ departmentId: departmentId });
-        console.log("Found levels:", levels); // Log the fetched levels
+        if (!levels.length) {
+            console.log("No levels found for department:", departmentId);
+            return res.status(404).json({ message: "No levels found" });
+        }
+        console.log("Found levels:", levels);
         res.json(levels);
     } catch (error) {
         console.error("Error fetching levels:", error);

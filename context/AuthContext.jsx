@@ -9,8 +9,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const login = (userData) => {
-    Cookies.set('token', userData.token, { expires: 1 }); // Set token in cookie, expires in 1 day
-    Cookies.set('user', JSON.stringify(userData), { expires: 1 }); // Optionally save user details in cookies for quick access
+    Cookies.set('token', userData.token, { expires: 1 });
+    Cookies.set('user', JSON.stringify(userData), { expires: 1 });
     setUser(userData);
   };
 
@@ -20,12 +20,12 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  // Check for authentication token on initial load
   useEffect(() => {
     const token = Cookies.get('token');
     const userDetails = Cookies.get('user');
     if (token && userDetails) {
-      setUser(JSON.parse(userDetails)); // Restore user details from cookie
+      const parsedUser = JSON.parse(userDetails);
+      setUser(parsedUser);
     }
   }, []);
 
@@ -37,3 +37,8 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+export const isAdmin = () => {
+  const { user } = useAuth();
+  return user && user.role === 'admin';
+};

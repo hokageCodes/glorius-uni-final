@@ -19,11 +19,17 @@ exports.createDepartment = async (req, res) => {
 };
 
 exports.getDepartmentsByFaculty = async (req, res) => {
+    const { facultyId } = req.params;
+    console.log("Requested faculty ID:", facultyId);
     try {
-        const { facultyId } = req.params;
         const departments = await Department.find({ facultyId: facultyId });
+        if (!departments.length) {
+            console.log("No departments found for this faculty ID:", facultyId);
+            return res.status(404).json({ message: "No departments found" });
+        }
         res.json(departments);
     } catch (error) {
+        console.error("Error fetching departments:", error);
         res.status(500).json({ message: error.message });
     }
 };
